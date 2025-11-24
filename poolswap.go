@@ -13,7 +13,7 @@ import (
 )
 
 // Ref should be embedded as the first field in your cache structs.
-// It then ensures cache-line padding to prevent false sharing on the counter.
+// Includes cache-line padding to prevent false sharing on the counter.
 type Ref struct {
 	count atomic.Int64
 	_     [56]byte // Padding to fill 64-byte cache line
@@ -24,6 +24,17 @@ func (r *Ref) setRef(v int64)           { r.count.Store(v) }
 
 // DebugPeekRef returns the current reference count; for testing and debugging only.
 func (r *Ref) DebugPeekRef() int64 { return r.count.Load() }
+
+// Same as Ref, but without the padding.
+type RefNoPadding struct {
+	count atomic.Int64
+}
+
+func (r *RefNoPadding) addRef(delta int64) int64 { return r.count.Add(delta) }
+func (r *RefNoPadding) setRef(v int64)           { r.count.Store(v) }
+
+// DebugPeekRef returns the current reference count; for testing and debugging only.
+func (r *RefNoPadding) DebugPeekRef() int64 { return r.count.Load() }
 
 // Referenceable defines the contract for objects managed by this library.
 // The only way to implement this is to embed our Ref struct.
