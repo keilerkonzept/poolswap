@@ -167,7 +167,7 @@ func update() {
 }
 ```
 
-When the writer swaps the pointer, readers may still hold references to `oldCache`. If `oldCache` is immediately returned to the pool, a subsequent `pool.Get()` can return the same memory location while the original reader is still using it—a use-after-free race condition. This is what the reference-counting in `poolswap` fixes.
+When the writer swaps the pointer, readers may still hold references to `oldCache`. If `oldCache` is immediately returned to the pool, a subsequent `pool.Get()` can return the same memory location while the original reader is still using it - a use-after-free race condition. This is what the reference-counting in `poolswap` fixes.
 
 ## License
 
