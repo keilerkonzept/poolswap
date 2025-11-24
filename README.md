@@ -1,7 +1,7 @@
 # poolswap
 
 [![Go Reference](https://pkg.go.dev/badge/github.com/keilerkonzept/poolswap.svg)](https://pkg.go.dev/github.com/keilerkonzept/poolswap)
-[![Go Report Card](https://goreportcard.com/badge/github.com/keilerkonzept/poolswap)](https://goreportcard.com/report/github.com/keilerkonzept/poolswap)
+[![Go Report Card](https://goreportcard.com/badge/github.com/keilerkonzept/poolswap?)](https://goreportcard.com/report/github.com/keilerkonzept/poolswap)
 
 A goroutine-safe container for hot-swapping heavy objects (e.g., caches, configurations) without blocking readers or generating GC pressure.
 
