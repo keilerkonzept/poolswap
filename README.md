@@ -162,8 +162,8 @@ The benchmark simulates a heavy object (a `map[string]string` with 100k entries)
 ### Analysis
 
 
-- **GC pressure amplifies allocation costs**: Under tight memory constraints, the performance of allocating pointer-swap approaches degrades severely - up to *~4-5x* slower than `poolswap`, which can use a `sync.Pool` and so incurs **(amortized) zero allocations** per op. This saves both on actual allocation work as well as on GC pause durations.
-- **Read-heavy workloads**: At 1% writes, `poolswap` is *~1.5x-2x* faster than (allocating) pointer-swaps under relaxed memory limits (512 MiB), but dramatically outperforms them when memory is scarce (50 MiB: *7-8x* faster).
+- **GC pressure amplifies allocation costs**: Under tight memory constraints, the performance of allocating pointer-swap approaches degrades severely - up to *8x* slower than `poolswap`, which can use a `sync.Pool` and so incurs **(amortized) zero allocations** per op. This saves both on actual allocation work as well as on GC pause durations.
+- **Read-heavy workloads**: At 1% writes, `poolswap` is *~1.5x-2x* faster than (allocating) pointer-swaps under relaxed memory limits (512 MiB), but dramatically outperforms them when memory is scarce (50 MiB: *4-5x* faster).
 * **Latency:** The `MutexInPlace` strategy never allocates but is *3-4x* slower because it forces all concurrent readers to wait while an update is in progress.
 
 
