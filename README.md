@@ -110,7 +110,7 @@ func update(container *poolswap.Container[MyCache, *MyCache]) {
 
 ## Performance
 
-Here's a benchmark of `poolswap` against the three other concurrency patterns for updating shared data mentioned above:
+To illustrate the kind of scenario where `poolswap` is useful, here's a benchmark against three other concurrency patterns for updating shared data:
 
 1.  **`AtomicPtr` (Allocating):** A lock-free copy-on-write using `atomic.Pointer`. Reads are fast, but every update allocates a new object, creating GC pressure.
 2.  **`MutexAlloc` (Allocating):** A copy-on-write protected by a `sync.RWMutex`. Similar to `AtomicPtr`, it creates garbage on every update.
@@ -120,7 +120,7 @@ The benchmark simulates a heavy object (a `map[string]string` with 100k entries)
 
 ### Benchmark Results
 
-*(go1.25.1 on an Apple M1 Pro, using 10 cores)*
+*(go1.25.1 on an Apple M1 Pro, 10 cores)*
 
 #### Time per Operation (lower is better)
 | Write Ratio | `poolswap` (baseline) | `AtomicPtr` (vs base) | `MutexAlloc` (vs base) | `MutexInPlace` (vs base) |
@@ -146,7 +146,7 @@ The benchmark simulates a heavy object (a `map[string]string` with 100k entries)
 ### Analysis
 
 *   **Performance:** `poolswap` is consistently the fastest implementation, about **2x faster** than the pointer-swapping strategies (`AtomicPtr`, `MutexAlloc`) across all tested write ratios.
-*   **GC Pressure:** The reason for the performance gap. `poolswap` can use a `sync.Pool` and so incurs (amortized) **zero allocations** per operation.
+*   **Allocation + GC Pressure:** The reason for the performance gap. `poolswap` can use a `sync.Pool` and so incurs (amortized) **zero allocations** per operation. This saves both on actual allocation work as well as on GC pause durations.
 *   **Latency:** The `MutexInPlace` strategy never allocates but is **3-4x slower** because it forces all concurrent readers to wait while an update is in progress.
 
 ## Notes
