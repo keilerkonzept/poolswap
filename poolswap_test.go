@@ -117,12 +117,12 @@ func TestStress_NoUseAfterFree(t *testing.T) {
 	wg.Wait()
 }
 
-func TestProp_SequentialLogic(t *testing.T) {
+func TestProp_Refcounts(t *testing.T) {
 	rapid.Check(t, func(t *rapid.T) {
 		type modelState struct {
 			activeID  int64
 			heldIDs   []int64
-			refCounts map[int64]int // id -> refCount
+			refCounts map[int64]int // id -> rc
 		}
 
 		state := modelState{

@@ -3,9 +3,7 @@
 [![Go Reference](https://pkg.go.dev/badge/github.com/keilerkonzept/poolswap.svg)](https://pkg.go.dev/github.com/keilerkonzept/poolswap)
 [![Go Report Card](https://goreportcard.com/badge/github.com/keilerkonzept/poolswap?)](https://goreportcard.com/report/github.com/keilerkonzept/poolswap)
 
-A goroutine-safe container for hot-swapping heavy objects (e.g., caches, configurations) without blocking readers or generating GC pressure.
-
-Wraps a `sync.Pool` with atomic reference counting to enable non-blocking reads while ensuring old objects are only recycled after all readers finish.
+Safe Copy-on-Write with `sync.Pool`. Wraps a `sync.Pool` with atomic reference counting to enable non-blocking reads while ensuring old objects are only recycled after all readers finish.
 
 **Contents**
 - [Why?](#why)
@@ -28,7 +26,7 @@ Read-mostly shared resources that need periodic updates present a tradeoff:
 
 - Non-blocking reads (lock held only during pointer acquisition)
 - Object reuse via `sync.Pool` (zero-allocation at steady state)
-- Type-safe API using Go generics
+- Type-safe API
 
 ## Usage
 
