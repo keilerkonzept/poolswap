@@ -12,7 +12,7 @@ import (
 	"sync/atomic"
 )
 
-// Ref should be embedded as the first field in your cache structs.
+// Ref should be embedded as the first field in structs you want to use with this library.
 // Includes cache-line padding to prevent false sharing on the counter.
 type Ref struct {
 	count atomic.Int64
@@ -52,10 +52,10 @@ type PtrRef[T any] interface {
 // Pool wraps a sync.Pool with reference counting.
 //
 // When an object's reference count hits zero, the Pool cleans it via the Reset
-// function and returns it to the underlying sync.Pool.
+// function and returns it to the internal sync.Pool.
 //
-// T is the struct type (e.g., VariantCache).
-// PT is the pointer type (e.g., *VariantCache).
+// T is the struct type (e.g., MyCache).
+// PT is the pointer type (e.g., *MyCache).
 type Pool[T any, PT PtrRef[T]] struct {
 	internal sync.Pool
 	// Reset is called when refs hit 0.
@@ -135,7 +135,7 @@ func NewContainer[T any, PT PtrRef[T]](pool *Pool[T, PT], init PT) *Container[T,
 	}
 }
 
-// Update performs a hot-swap.
+// Update the container to point at a new object.
 //
 // It sets the new object as current and releases the old object.
 // The old object will be returned to the pool once all existing readers release it.
